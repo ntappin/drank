@@ -35,7 +35,7 @@ def tweet_queue(drank)
 end
 
 def tweeter(person)
-  puts person
+  client.update("#{person} just took a DRANK!")
 end
 
 loop do
