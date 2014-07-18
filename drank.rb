@@ -2,8 +2,7 @@ require 'twitter'
 require 'io/console'
 load 'creds.rb'
 
-@queue = []
-@twitter
+@tally = {}
 
 def stdin_to_person(input)
   case input
@@ -26,26 +25,54 @@ def stdin_to_person(input)
   when 's'
     "Massad"
   else
-    "Someone"
+    "Some Rando"
   end
 end
 
-def tweet_queue(drank)
-  @queue.push(drank)
-end
-
-def tweeter(person)
-  @twitter.update("#{person} just took a DRANK!")
-end
-
-loop do
-
-  input = STDIN.getch
-  if input == "\\"
-    break
+def tweet_tally(drank)
+  person = stdin_to_person(drank)
+  if @tally[person].nil?
+    @tally[person] = 1
+  else
+    @tally[person] += 1
   end
-
-  tweet_queue(input)
-  tweeter(stdin_to_person(@queue.pop))
-
 end
+
+def tweeter(winner)
+  @twitter.update("#{winner[0]} DRANK #{winner[1]} times for the win!")
+end
+
+def listener
+  loop do
+    input = STDIN.getch.chomp
+    tweet_tally(input)
+  end
+end
+
+def determine_winner
+  @tally.max_by{|k,v| v}
+end
+
+def log_winner(winner)
+  open('log.txt', 'a'){|f|
+    f.puts "#{winner[0]},#{winner[1]}"
+  }
+end
+
+def speaker
+  loop do
+    unless @tally.empty?
+      winner = determine_winner
+      tweeter(winner)
+      log_winner(winner)
+      @tally.clear
+      sleep 60
+    end
+  end
+end
+
+listenThread = Thread.start{listener}
+speakThread = Thread.start{speaker}
+
+listenThread.join
+speakThread.join
