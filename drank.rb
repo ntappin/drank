@@ -8,24 +8,24 @@ load 'creds.rb'
 
 def stdin_to_person(input)
   case input
-  when 'b'
-    "Ben"
-  when 'n'
-    "Nathan"
-  when 'l'
-    "Lydia"
-  when 'a'
-    "Alex"
-  when 'h'
-    "Hugh"
-  when 'd'
-    "David"
   when 'w'
+    "Ben"
+  when 'a'
+    "Nathan"
+  when 's'
+    "Lydia"
+  when 'd'
+    "Alex"
+  when 'f'
+    "Hugh"
+  when 'g'
+    "David"
+  when 'q'
     "Wilson"
-  when 'm'
+  when ' '
     "Mitch"
   when 's'
-    "Massad"
+    "Massaad"
   else
     "Some Rando"
   end
